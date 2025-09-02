@@ -25,27 +25,27 @@ import {
 } from "lucide-react";
 
 const coordinatorItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Students", url: "/students", icon: Users },
-  { title: "Professors", url: "/professors", icon: GraduationCap },
-  { title: "Assignments", url: "/assignments", icon: UserCheck },
-  { title: "Deadlines", url: "/deadlines", icon: Calendar },
-  { title: "Review Panels", url: "/review-panels", icon: ClipboardList },
-  { title: "Reports", url: "/reports", icon: BarChart3 },
+  { title: "Painel", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Alunos", url: "/students", icon: Users },
+  { title: "Professores", url: "/professors", icon: GraduationCap },
+  { title: "Orientações", url: "/assignments", icon: UserCheck },
+  { title: "Cronograma", url: "/deadlines", icon: Calendar },
+  { title: "Bancas", url: "/review-panels", icon: ClipboardList },
+  { title: "Relatórios", url: "/reports", icon: BarChart3 },
 ];
 
 const professorItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "My Advisees", url: "/advisees", icon: Users },
-  { title: "Grading", url: "/grading", icon: ClipboardList },
-  { title: "Calendar", url: "/calendar", icon: Calendar },
+  { title: "Painel", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Meus Orientandos", url: "/advisees", icon: Users },
+  { title: "Avaliações", url: "/grading", icon: ClipboardList },
+  { title: "Calendário", url: "/calendar", icon: Calendar },
 ];
 
 const studentItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "My Project", url: "/project", icon: FileText },
-  { title: "Meetings", url: "/meetings", icon: BookOpen },
-  { title: "Deadlines", url: "/deadlines", icon: Calendar },
+  { title: "Painel", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Meu Projeto", url: "/project", icon: FileText },
+  { title: "Reuniões", url: "/meetings", icon: BookOpen },
+  { title: "Prazos", url: "/deadlines", icon: Calendar },
 ];
 
 export function ThesisSidebar() {
@@ -81,14 +81,14 @@ export function ThesisSidebar() {
 
   const getRoleLabel = () => {
     switch (userRole) {
-      case 'coordinator':
-        return 'Coordinator';
-      case 'professor':
-        return 'Professor';
-      case 'student':
-        return 'Student';
+      case "coordinator":
+        return "Coordenador";
+      case "professor":
+        return "Professor";
+      case "student":
+        return "Aluno";
       default:
-        return 'Dashboard';
+        return "Painel";
     }
   };
 
@@ -103,7 +103,7 @@ export function ThesisSidebar() {
             </div>
             {!collapsed && (
               <div>
-                <h2 className="font-semibold text-foreground">Thesis Manager</h2>
+                <h2 className="font-semibold text-foreground">Gestor de TC</h2>
                 <p className="text-xs text-muted-foreground">{getRoleLabel()}</p>
               </div>
             )}
@@ -113,7 +113,7 @@ export function ThesisSidebar() {
 
         <SidebarGroup>
           <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>
-            Navigation
+            Navegação
           </SidebarGroupLabel>
 
           <SidebarGroupContent>

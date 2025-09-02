@@ -34,45 +34,45 @@ const Students = () => {
       id: 1,
       name: "Alice Johnson",
       email: "alice.johnson@university.edu",
-      projectTitle: "Machine Learning Applications in Healthcare",
+      projectTitle: "Aplicações de Machine Learning na Saúde",
       advisor: "Dr. Sarah Chen",
-      status: "In Progress",
+      status: "Em Andamento",
       progress: 75
     },
     {
       id: 2,
       name: "Bob Smith",
       email: "bob.smith@university.edu",
-      projectTitle: "Sustainable Urban Planning Strategies",
+      projectTitle: "Estratégias de Planejamento Urbano Sustentável",
       advisor: "Prof. Michael Rodriguez",
-      status: "Proposal",
+      status: "Proposta",
       progress: 25
     },
     {
       id: 3,
       name: "Carol Davis",
       email: "carol.davis@university.edu",
-      projectTitle: "Blockchain in Supply Chain Management",
+      projectTitle: "Blockchain no Gerenciamento da Cadeia de Suprimentos",
       advisor: "Dr. James Lee",
-      status: "Submitted",
+      status: "Entregue",
       progress: 100
     },
     {
       id: 4,
       name: "David Wilson",
       email: "david.wilson@university.edu",
-      projectTitle: "Renewable Energy Storage Solutions",
+      projectTitle: "Soluções de Armazenamento de Energia Renovável",
       advisor: "Prof. Emily Martinez",
-      status: "Graded",
+      status: "Avaliado",
       progress: 100
     },
     {
       id: 5,
       name: "Emma Brown",
       email: "emma.brown@university.edu",
-      projectTitle: "AI Ethics in Decision Making Systems",
+      projectTitle: "Ética em IA para Sistemas de Tomada de Decisão",
       advisor: "Dr. Sarah Chen",
-      status: "In Progress",
+      status: "Em Andamento",
       progress: 60
     }
   ];

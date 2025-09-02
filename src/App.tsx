@@ -8,6 +8,8 @@ import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
 import Professors from "./pages/Professors";
 import Assignments from "./pages/Assignments";
+import ReviewPanels from "./pages/ReviewPanels";
+import Grading from "./pages/Grading";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +44,16 @@ const App = () => (
           <Route path="/assignments" element={
             <DashboardLayout>
               <Assignments />
+            </DashboardLayout>
+          } />
+          <Route path="/review-panels" element={
+            <DashboardLayout>
+              <ReviewPanels />
+            </DashboardLayout>
+          } />
+          <Route path="/grading" element={
+            <DashboardLayout>
+              <Grading />
             </DashboardLayout>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

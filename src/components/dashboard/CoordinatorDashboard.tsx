@@ -16,65 +16,65 @@ import dashboardHero from "@/assets/dashboard-hero.jpg";
 export function CoordinatorDashboard() {
   const stats = [
     {
-      title: "Total Students",
+      title: "Total de Alunos",
       value: "48",
-      change: "+4 this month",
+      change: "+4 este mês",
       icon: Users,
       color: "text-blue-600"
     },
     {
-      title: "Active Projects",
+      title: "Projetos Ativos",
       value: "42",
-      change: "6 submitted",
+      change: "6 entregues",
       icon: FileText,
       color: "text-green-600"
     },
     {
-      title: "Upcoming Deadlines",
+      title: "Prazos Próximos",
       value: "7",
-      change: "Next: 3 days",
+      change: "Próximo: 3 dias",
       icon: Calendar,
       color: "text-orange-600"
     },
     {
-      title: "Overdue Items",
+      title: "Itens Atrasados",
       value: "3",
-      change: "Requires attention",
+      change: "Precisa atenção",
       icon: AlertTriangle,
       color: "text-red-600"
     }
   ];
 
   const projectStatuses = [
-    { status: "Proposal", count: 12, color: "bg-blue-500", percentage: 25 },
-    { status: "In Progress", count: 18, color: "bg-yellow-500", percentage: 38 },
-    { status: "Submitted", count: 10, color: "bg-green-500", percentage: 21 },
-    { status: "Graded", count: 8, color: "bg-purple-500", percentage: 17 }
+    { status: "Proposta", count: 12, color: "bg-blue-500", percentage: 25 },
+    { status: "Em Andamento", count: 18, color: "bg-yellow-500", percentage: 38 },
+    { status: "Entregue", count: 10, color: "bg-green-500", percentage: 21 },
+    { status: "Avaliado", count: 8, color: "bg-purple-500", percentage: 17 }
   ];
 
   const recentActivities = [
     {
       student: "Alice Johnson",
-      action: "Submitted final project",
-      time: "2 hours ago",
+      action: "Entregou projeto final",
+      time: "2 horas atrás",
       status: "success"
     },
     {
       student: "Bob Smith",
-      action: "Missed proposal deadline",
-      time: "1 day ago",
+      action: "Perdeu prazo da proposta",
+      time: "1 dia atrás",
       status: "warning"
     },
     {
       student: "Carol Davis",
-      action: "Started working with Prof. Martinez",
-      time: "2 days ago",
+      action: "Iniciou orientação com Prof. Martinez",
+      time: "2 dias atrás",
       status: "info"
     },
     {
       student: "David Wilson",
-      action: "Revised proposal approved",
-      time: "3 days ago",
+      action: "Proposta reelaborada aprovada",
+      time: "3 dias atrás",
       status: "success"
     }
   ];
@@ -86,16 +86,16 @@ export function CoordinatorDashboard() {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative flex items-center justify-between p-8 text-white">
           <div className="space-y-3">
-            <h1 className="text-4xl font-bold tracking-tight">Coordinator Dashboard</h1>
+            <h1 className="text-4xl font-bold tracking-tight">Painel do Coordenador</h1>
             <p className="text-xl text-white/90 max-w-2xl">
-              Manage thesis projects, track student progress, and coordinate with faculty members
+              Gerencie projetos de TC, acompanhe o progresso dos alunos e coordene com o corpo docente
             </p>
             <div className="flex gap-4 pt-4">
               <Button variant="secondary" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                View All Students
+                Ver Todos os Alunos
               </Button>
               <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                Generate Report
+                Gerar Relatório
               </Button>
             </div>
           </div>
@@ -136,10 +136,10 @@ export function CoordinatorDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5" />
-              Project Status Overview
+              Visão Geral dos Projetos
             </CardTitle>
             <CardDescription>
-              Current distribution of project statuses
+              Distribuição atual dos status dos projetos
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -147,7 +147,7 @@ export function CoordinatorDashboard() {
               <div key={item.status} className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium">{item.status}</span>
-                  <span className="text-muted-foreground">{item.count} projects</span>
+                  <span className="text-muted-foreground">{item.count} projetos</span>
                 </div>
                 <Progress value={item.percentage} className="h-2" />
               </div>
@@ -160,10 +160,10 @@ export function CoordinatorDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Clock className="w-5 h-5" />
-              Recent Activities
+              Atividades Recentes
             </CardTitle>
             <CardDescription>
-              Latest updates from students and professors
+              Últimas atualizações de alunos e professores
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -190,7 +190,7 @@ export function CoordinatorDashboard() {
               ))}
             </div>
             <Button variant="outline" className="w-full mt-4">
-              View All Activities
+              Ver Todas as Atividades
             </Button>
           </CardContent>
         </Card>
@@ -199,24 +199,24 @@ export function CoordinatorDashboard() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle>Ações Rápidas</CardTitle>
           <CardDescription>
-            Common tasks for thesis coordination
+            Tarefas comuns para coordenação de TC
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <Button className="h-20 flex-col gap-2" variant="outline">
               <Users className="w-6 h-6" />
-              Add New Student
+              Adicionar Aluno
             </Button>
             <Button className="h-20 flex-col gap-2" variant="outline">
               <Calendar className="w-6 h-6" />
-              Set Deadline
+              Definir Prazo
             </Button>
             <Button className="h-20 flex-col gap-2" variant="outline">
               <FileText className="w-6 h-6" />
-              Generate Report
+              Gerar Relatório
             </Button>
           </div>
         </CardContent>
