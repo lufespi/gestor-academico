@@ -10,6 +10,8 @@ import Professors from "./pages/Professors";
 import Assignments from "./pages/Assignments";
 import ReviewPanels from "./pages/ReviewPanels";
 import Grading from "./pages/Grading";
+import Deadlines from "./pages/Deadlines";
+import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +56,16 @@ const App = () => (
           <Route path="/grading" element={
             <DashboardLayout>
               <Grading />
+            </DashboardLayout>
+          } />
+          <Route path="/deadlines" element={
+            <DashboardLayout>
+              <Deadlines />
+            </DashboardLayout>
+          } />
+          <Route path="/reports" element={
+            <DashboardLayout>
+              <Reports />
             </DashboardLayout>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
