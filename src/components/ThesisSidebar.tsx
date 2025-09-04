@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Sidebar,
   SidebarContent,
@@ -54,9 +54,8 @@ export function ThesisSidebar() {
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
 
-  // For demo purposes, we'll use coordinator items
-  // In a real app, this would be determined by user role
-  const [userRole] = useState<'coordinator' | 'professor' | 'student'>('coordinator');
+  const { profile } = useAuth();
+  const userRole = profile?.role || 'student';
   
   const getMenuItems = () => {
     switch (userRole) {
@@ -77,7 +76,7 @@ export function ThesisSidebar() {
   const getNavClassName = ({ isActive }: { isActive: boolean }) =>
     isActive
       ? "bg-primary text-primary-foreground font-medium shadow-sm"
-      : "hover:bg-accent hover:text-accent-foreground transition-colors";
+      : "text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors";
 
   const getRoleLabel = () => {
     switch (userRole) {

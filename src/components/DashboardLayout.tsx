@@ -12,12 +12,45 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const { profile, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: "Erro ao sair",
+        description: error.message,
+        variant: "destructive"
+      });
+    } else {
+      navigate('/auth');
+    }
+  };
+
+  const getRoleLabel = (role?: string) => {
+    switch (role) {
+      case 'coordinator': return 'Coordenador';
+      case 'professor': return 'Professor';
+      case 'student': return 'Aluno';
+      default: return 'Usuário';
+    }
+  };
+
+  const getInitials = (name?: string) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -42,7 +75,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
               {/* Header Actions */}
               <div className="flex items-center gap-4">
-                <Button variant="ghost" size="icon" className="relative">
+                <Button variant="ghost" size="icon" className="relative hover:bg-primary/10">
                   <Bell className="w-5 h-5" />
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full text-xs"></span>
                 </Button>
@@ -51,9 +84,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src="/placeholder-avatar.png" alt="Avatar" />
+                        <AvatarImage src={profile?.avatar_url || undefined} alt="Avatar" />
                         <AvatarFallback className="bg-primary text-primary-foreground">
-                          AC
+                          {getInitials(profile?.full_name)}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
@@ -61,9 +94,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   <DropdownMenuContent className="w-56 bg-card" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">Admin Coordenador</p>
+                        <p className="text-sm font-medium leading-none">{profile?.full_name}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          admin@universidade.edu.br
+                          {profile?.email}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {getRoleLabel(profile?.role)}
                         </p>
                       </div>
                     </DropdownMenuLabel>
@@ -81,7 +117,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       <span>Configurações</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="cursor-pointer text-destructive">
+                    <DropdownMenuItem className="cursor-pointer text-destructive" onClick={handleSignOut}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Sair</span>
                     </DropdownMenuItem>
