@@ -70,6 +70,10 @@ export default {
                     'accent-foreground': 'var(--sidebar-accent-foreground)',
                     border: 'var(--sidebar-border)',
                     ring: 'var(--sidebar-ring)'
+                },
+                metric: {
+                    secondary: 'var(--metric-secondary)',
+                    alert: 'var(--metric-alert)'
                 }
             },
             borderRadius: {

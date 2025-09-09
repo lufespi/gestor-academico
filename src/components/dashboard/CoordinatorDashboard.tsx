@@ -121,7 +121,11 @@ export function CoordinatorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className={`text-xs mt-1 ${
+                stat.title === "Itens Atrasados" 
+                  ? "text-metric-alert" 
+                  : "text-metric-secondary"
+              }`}>
                 {stat.change}
               </p>
             </CardContent>

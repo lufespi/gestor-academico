@@ -58,6 +58,10 @@
     --sidebar-accent-foreground: #fdfdfd;
     --sidebar-border: #e2e8f0;
     --sidebar-ring: #ffffff;
+    
+    /* Custom metric colors */
+    --metric-secondary: #64748b;
+    --metric-alert: #ef4444;
   }
 
   .dark {
@@ -102,6 +106,10 @@
     --sidebar-accent-foreground: #f8fafc;
     --sidebar-border: #475569;
     --sidebar-ring: #3b82f6;
+    
+    /* Custom metric colors */
+    --metric-secondary: #64748b;
+    --metric-alert: #ef4444;
   }
 }
 
