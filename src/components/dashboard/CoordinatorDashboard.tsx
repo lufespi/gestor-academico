@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 import { 
   Users, 
   FileText, 
@@ -12,33 +13,84 @@ import {
   TrendingUp 
 } from "lucide-react";
 import dashboardHero from "@/assets/dashboard-hero.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+
+interface DashboardMetrics {
+  totalStudents: number;
+  activeProjects: number;
+  upcomingDeadlines: number;
+  overdueItems: number;
+}
 
 export function CoordinatorDashboard() {
+  const [metrics, setMetrics] = useState<DashboardMetrics>({
+    totalStudents: 0,
+    activeProjects: 0,
+    upcomingDeadlines: 0,
+    overdueItems: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch all metrics in parallel
+        const [
+          { data: totalStudents },
+          { data: activeProjects },
+          { data: upcomingDeadlines },
+          { data: overdueItems }
+        ] = await Promise.all([
+          supabase.rpc('get_total_students'),
+          supabase.rpc('get_active_projects'),
+          supabase.rpc('get_upcoming_deadlines_count'),
+          supabase.rpc('get_overdue_items_count')
+        ]);
+
+        setMetrics({
+          totalStudents: totalStudents || 0,
+          activeProjects: activeProjects || 0,
+          upcomingDeadlines: upcomingDeadlines || 0,
+          overdueItems: overdueItems || 0
+        });
+      } catch (error) {
+        console.error('Error fetching dashboard metrics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMetrics();
+  }, []);
+
   const stats = [
     {
       title: "Total de Alunos",
-      value: "48",
+      value: metrics.totalStudents,
       change: "+4 este mês",
       icon: Users,
       color: "text-blue-600"
     },
     {
       title: "Projetos Ativos",
-      value: "42",
+      value: metrics.activeProjects,
       change: "6 entregues",
       icon: FileText,
       color: "text-green-600"
     },
     {
       title: "Prazos Próximos",
-      value: "7",
+      value: metrics.upcomingDeadlines,
       change: "Próximo: 3 dias",
       icon: Calendar,
       color: "text-orange-600"
     },
     {
       title: "Itens Atrasados",
-      value: "3",
+      value: metrics.overdueItems,
       change: "Precisa atenção",
       icon: AlertTriangle,
       color: "text-red-600"
@@ -120,14 +172,23 @@ export function CoordinatorDashboard() {
               <stat.icon className={`h-5 w-5 ${stat.color}`} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-              <p className={`text-xs mt-1 ${
-                stat.title === "Itens Atrasados" 
-                  ? "text-metric-alert" 
-                  : "text-metric-secondary"
-              }`}>
-                {stat.change}
-              </p>
+              {loading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-8 w-16" />
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              ) : (
+                <>
+                  <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+                  <p className={`text-xs mt-1 ${
+                    stat.title === "Itens Atrasados" 
+                      ? "text-metric-alert" 
+                      : "text-metric-secondary"
+                  }`}>
+                    {stat.change}
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
         ))}

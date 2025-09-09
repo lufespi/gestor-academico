@@ -430,6 +430,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_active_projects: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      get_overdue_items_count: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      get_total_students: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      get_upcoming_deadlines_count: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_user_role: {
         Args: { user_uuid: string }
         Returns: Database["public"]["Enums"]["user_role"]
