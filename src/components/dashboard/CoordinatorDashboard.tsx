@@ -15,12 +15,24 @@ import {
 import dashboardHero from "@/assets/dashboard-hero.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
+import { formatDistanceToNow } from "date-fns";
 
 interface DashboardMetrics {
   totalStudents: number;
   activeProjects: number;
   upcomingDeadlines: number;
   overdueItems: number;
+}
+
+interface ProjectStatus {
+  status_name: string;
+  project_count: number;
+}
+
+interface RecentActivity {
+  description: string;
+  created_at: string;
+  type: string;
 }
 
 export function CoordinatorDashboard() {
@@ -31,13 +43,16 @@ export function CoordinatorDashboard() {
     overdueItems: 0
   });
   const [loading, setLoading] = useState(true);
+  const [projectStatuses, setProjectStatuses] = useState<ProjectStatus[]>([]);
+  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
+  const [projectStatusLoading, setProjectStatusLoading] = useState(true);
+  const [activitiesLoading, setActivitiesLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMetrics = async () => {
+    const fetchAllData = async () => {
       try {
+        // Fetch metrics
         setLoading(true);
-        
-        // Fetch all metrics in parallel
         const [
           { data: totalStudents },
           { data: activeProjects },
@@ -56,14 +71,37 @@ export function CoordinatorDashboard() {
           upcomingDeadlines: upcomingDeadlines || 0,
           overdueItems: overdueItems || 0
         });
-      } catch (error) {
-        console.error('Error fetching dashboard metrics:', error);
-      } finally {
         setLoading(false);
+
+        // Fetch project status distribution
+        setProjectStatusLoading(true);
+        const { data: statusData, error: statusError } = await supabase.rpc('get_project_status_distribution');
+        if (statusError) {
+          console.error('Error fetching project status distribution:', statusError);
+        } else {
+          setProjectStatuses(statusData || []);
+        }
+        setProjectStatusLoading(false);
+
+        // Fetch recent activities
+        setActivitiesLoading(true);
+        const { data: activitiesData, error: activitiesError } = await supabase.rpc('get_recent_activities');
+        if (activitiesError) {
+          console.error('Error fetching recent activities:', activitiesError);
+        } else {
+          setRecentActivities(activitiesData || []);
+        }
+        setActivitiesLoading(false);
+
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        setLoading(false);
+        setProjectStatusLoading(false);
+        setActivitiesLoading(false);
       }
     };
 
-    fetchMetrics();
+    fetchAllData();
   }, []);
 
   const stats = [
@@ -97,39 +135,27 @@ export function CoordinatorDashboard() {
     }
   ];
 
-  const projectStatuses = [
-    { status: "Proposta", count: 12, color: "bg-blue-500", percentage: 25 },
-    { status: "Em Andamento", count: 18, color: "bg-yellow-500", percentage: 38 },
-    { status: "Entregue", count: 10, color: "bg-green-500", percentage: 21 },
-    { status: "Avaliado", count: 8, color: "bg-purple-500", percentage: 17 }
-  ];
+  // Calculate total projects and percentages for dynamic project statuses
+  const totalProjects = projectStatuses.reduce((sum, status) => sum + Number(status.project_count), 0);
+  
+  const statusColors: Record<string, string> = {
+    "Proposta": "bg-blue-500",
+    "Em Andamento": "bg-yellow-500", 
+    "Entregue": "bg-green-500",
+    "Avaliado": "bg-purple-500"
+  };
 
-  const recentActivities = [
-    {
-      student: "Alice Johnson",
-      action: "Entregou projeto final",
-      time: "2 horas atrás",
-      status: "success"
-    },
-    {
-      student: "Bob Smith",
-      action: "Perdeu prazo da proposta",
-      time: "1 dia atrás",
-      status: "warning"
-    },
-    {
-      student: "Carol Davis",
-      action: "Iniciou orientação com Prof. Martinez",
-      time: "2 dias atrás",
-      status: "info"
-    },
-    {
-      student: "David Wilson",
-      action: "Proposta reelaborada aprovada",
-      time: "3 dias atrás",
-      status: "success"
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case 'success':
+        return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'warning':
+        return <AlertTriangle className="w-4 h-4 text-orange-500" />;
+      case 'info':
+      default:
+        return <Clock className="w-4 h-4 text-blue-500" />;
     }
-  ];
+  };
 
   return (
     <div className="space-y-8">
@@ -208,15 +234,32 @@ export function CoordinatorDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {projectStatuses.map((item) => (
-              <div key={item.status} className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{item.status}</span>
-                  <span className="text-muted-foreground">{item.count} projetos</span>
+            {projectStatusLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-20" />
+                  </div>
+                  <Skeleton className="h-2 w-full" />
                 </div>
-                <Progress value={item.percentage} className="h-2" />
-              </div>
-            ))}
+              ))
+            ) : projectStatuses.length > 0 ? (
+              projectStatuses.map((item) => (
+                <div key={item.status_name} className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium">{item.status_name}</span>
+                    <span className="text-muted-foreground">{item.project_count} projetos</span>
+                  </div>
+                  <Progress 
+                    value={totalProjects > 0 ? (Number(item.project_count) / totalProjects) * 100 : 0} 
+                    className="h-2" 
+                  />
+                </div>
+              ))
+            ) : (
+              <p className="text-muted-foreground text-center py-4">Nenhum dado de projeto disponível</p>
+            )}
           </CardContent>
         </Card>
 
@@ -233,26 +276,34 @@ export function CoordinatorDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentActivities.map((activity, index) => (
-                <div key={index} className="flex items-start gap-3 pb-3 border-b last:border-0">
-                  <div className="mt-0.5">
-                    {activity.status === 'success' && (
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                    )}
-                    {activity.status === 'warning' && (
-                      <AlertTriangle className="w-4 h-4 text-orange-500" />
-                    )}
-                    {activity.status === 'info' && (
-                      <Clock className="w-4 h-4 text-blue-500" />
-                    )}
+              {activitiesLoading ? (
+                Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="flex items-start gap-3 pb-3 border-b last:border-0">
+                    <Skeleton className="w-4 h-4 mt-0.5" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-48" />
+                      <Skeleton className="h-3 w-20" />
+                    </div>
                   </div>
-                  <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium">{activity.student}</p>
-                    <p className="text-sm text-muted-foreground">{activity.action}</p>
-                    <p className="text-xs text-muted-foreground">{activity.time}</p>
+                ))
+              ) : recentActivities.length > 0 ? (
+                recentActivities.map((activity, index) => (
+                  <div key={index} className="flex items-start gap-3 pb-3 border-b last:border-0">
+                    <div className="mt-0.5">
+                      {getActivityIcon(activity.type)}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <p className="text-sm text-muted-foreground">{activity.description}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-muted-foreground text-center py-4">Nenhuma atividade recente para mostrar</p>
+              )}
             </div>
             <Button variant="outline" className="w-full mt-4">
               Ver Todas as Atividades

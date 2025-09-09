@@ -438,6 +438,21 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      get_project_status_distribution: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          project_count: number
+          status_name: string
+        }[]
+      }
+      get_recent_activities: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          created_at: string
+          description: string
+          type: string
+        }[]
+      }
       get_total_students: {
         Args: Record<PropertyKey, never>
         Returns: number
