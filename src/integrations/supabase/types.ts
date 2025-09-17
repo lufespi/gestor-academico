@@ -434,6 +434,18 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      get_my_deadlines: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      get_my_meetings: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      get_my_project_details: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       get_overdue_items_count: {
         Args: Record<PropertyKey, never>
         Returns: number

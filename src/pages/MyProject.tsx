@@ -24,12 +24,12 @@ const MyProject = () => {
       if (!user) return;
 
       try {
-        const { data, error } = await supabase.rpc('get_my_project_details');
+        const { data, error } = await (supabase as any).rpc('get_my_project_details');
         
         if (error) {
           setError(error.message);
         } else {
-          setProject(data);
+          setProject((data as any) as ProjectDetails);
         }
       } catch (err) {
         setError('Erro ao carregar os dados do projeto');

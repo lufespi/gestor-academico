@@ -43,7 +43,7 @@ const professorItems = [
 
 const studentItems = [
   { title: "Painel", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Meu Projeto", url: "/project", icon: FileText },
+  { title: "Meu Projeto", url: "/my-project", icon: FileText },
   { title: "Reuniões", url: "/meetings", icon: BookOpen },
   { title: "Prazos", url: "/deadlines", icon: Calendar },
 ];

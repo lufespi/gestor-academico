@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import Auth from "./pages/Auth";
@@ -15,9 +15,20 @@ import ReviewPanels from "./pages/ReviewPanels";
 import Grading from "./pages/Grading";
 import Deadlines from "./pages/Deadlines";
 import Reports from "./pages/Reports";
+import MyProject from "./pages/MyProject";
+import Meetings from "./pages/Meetings";
+import StudentDeadlines from "./pages/StudentDeadlines";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+const RoleBasedDeadlines = () => {
+  const { profile } = useAuth();
+  if (profile?.role === 'student') {
+    return <StudentDeadlines />;
+  }
+  return <Deadlines />;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -33,6 +44,20 @@ const App = () => (
               <ProtectedRoute>
                 <DashboardLayout>
                   <Dashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-project" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <MyProject />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/meetings" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Meetings />
                 </DashboardLayout>
               </ProtectedRoute>
             } />
@@ -74,7 +99,7 @@ const App = () => (
             <Route path="/deadlines" element={
               <ProtectedRoute>
                 <DashboardLayout>
-                  <Deadlines />
+                  <RoleBasedDeadlines />
                 </DashboardLayout>
               </ProtectedRoute>
             } />

@@ -25,12 +25,12 @@ const StudentDeadlines = () => {
       if (!user) return;
 
       try {
-        const { data, error } = await supabase.rpc('get_my_deadlines');
+        const { data, error } = await (supabase as any).rpc('get_my_deadlines');
         
         if (error) {
           setError(error.message);
         } else {
-          setDeadlines(data || []);
+          setDeadlines((data as any[]) || []);
         }
       } catch (err) {
         setError('Erro ao carregar os prazos');

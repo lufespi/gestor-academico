@@ -32,12 +32,12 @@ const Meetings = () => {
       if (!user) return;
 
       try {
-        const { data, error } = await supabase.rpc('get_my_meetings');
+        const { data, error } = await (supabase as any).rpc('get_my_meetings');
         
         if (error) {
           setError(error.message);
         } else {
-          setMeetings(data || []);
+          setMeetings((data as any[]) || []);
         }
       } catch (err) {
         setError('Erro ao carregar as reuniões');
