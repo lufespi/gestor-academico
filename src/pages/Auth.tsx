@@ -49,7 +49,7 @@ export default function Auth() {
             title: "Login realizado com sucesso!",
             description: "Bem-vindo de volta ao sistema."
           });
-          navigate('/dashboard');
+          // Don't navigate immediately - let AuthContext handle role-based redirect
         }
       } else if (mode === 'signup') {
         const { error } = await signUp(formData.email, formData.password, formData.fullName, formData.role);

@@ -48,6 +48,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               .eq('user_id', session.user.id)
               .single();
             setProfile(profileData);
+            
+            // Role-based redirect after successful login
+            if (event === 'SIGNED_IN' && profileData?.role) {
+              const roleRoutes = {
+                coordinator: '/dashboard',
+                professor: '/dashboard', 
+                student: '/dashboard'
+              };
+              window.location.href = roleRoutes[profileData.role as keyof typeof roleRoutes] || '/dashboard';
+            }
           }, 0);
         } else {
           setProfile(null);

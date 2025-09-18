@@ -206,11 +206,9 @@ export function CoordinatorDashboard() {
               ) : (
                 <>
                   <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                  <p className={`text-xs mt-1 ${
-                    stat.title === "Itens Atrasados" 
-                      ? "text-metric-alert" 
-                      : "text-metric-secondary"
-                  }`}>
+                  <p className={`text-xs mt-1`} style={{
+                    color: stat.title === "Itens Atrasados" ? "#EF4444" : "#64748B"
+                  }}>
                     {stat.change}
                   </p>
                 </>
