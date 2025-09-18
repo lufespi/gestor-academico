@@ -8,9 +8,9 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, roleResolved } = useAuth();
 
-  if (loading) {
+  if (loading || !roleResolved) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -22,8 +22,24 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     return <Navigate to="/auth" replace />;
   }
 
-  if (requiredRole && profile?.role !== requiredRole) {
-    return <Navigate to="/dashboard" replace />;
+  // If no specific role required, allow access
+  if (!requiredRole) {
+    return <>{children}</>;
+  }
+
+  // Check role-based access
+  if (profile?.role !== requiredRole) {
+    // Redirect to user's appropriate dashboard
+    const roleRoutes = {
+      coordinator: '/coordinator/dashboard',
+      professor: '/professor/dashboard',
+      student: '/student/dashboard'
+    };
+    const userRoute = roleRoutes[profile?.role as keyof typeof roleRoutes];
+    if (userRoute) {
+      return <Navigate to={userRoute} replace />;
+    }
+    return <Navigate to="/auth" replace />;
   }
 
   return <>{children}</>;

@@ -10,6 +10,7 @@ interface AuthContextType {
   session: Session | null;
   profile: Tables<'profiles'> | null;
   loading: boolean;
+  roleResolved: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, fullName: string, role: UserRole) => Promise<{ error: any }>;
   signOut: () => Promise<{ error: any }>;
@@ -31,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Tables<'profiles'> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [roleResolved, setRoleResolved] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -48,19 +50,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               .eq('user_id', session.user.id)
               .single();
             setProfile(profileData);
+            setRoleResolved(true);
             
-            // Role-based redirect after successful login
-            if (event === 'SIGNED_IN' && profileData?.role) {
+            // Role-based redirect after successful login - only if we're on login page
+            if (event === 'SIGNED_IN' && profileData?.role && window.location.pathname === '/auth') {
               const roleRoutes = {
-                coordinator: '/dashboard',
-                professor: '/dashboard', 
-                student: '/dashboard'
+                coordinator: '/coordinator/dashboard',
+                professor: '/professor/dashboard', 
+                student: '/student/dashboard'
               };
               window.location.href = roleRoutes[profileData.role as keyof typeof roleRoutes] || '/dashboard';
             }
           }, 0);
         } else {
           setProfile(null);
+          setRoleResolved(true);
         }
         setLoading(false);
       }
@@ -122,6 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     session,
     profile,
     loading,
+    roleResolved,
     signIn,
     signUp,
     signOut,

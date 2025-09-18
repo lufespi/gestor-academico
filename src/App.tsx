@@ -47,6 +47,27 @@ const App = () => (
                 </DashboardLayout>
               </ProtectedRoute>
             } />
+            <Route path="/coordinator/dashboard" element={
+              <ProtectedRoute requiredRole="coordinator">
+                <DashboardLayout>
+                  <Dashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/professor/dashboard" element={
+              <ProtectedRoute requiredRole="professor">
+                <DashboardLayout>
+                  <Dashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/student/dashboard" element={
+              <ProtectedRoute requiredRole="student">
+                <DashboardLayout>
+                  <Dashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
             <Route path="/my-project" element={
               <ProtectedRoute>
                 <DashboardLayout>
